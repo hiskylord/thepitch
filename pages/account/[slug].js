@@ -1,18 +1,24 @@
 import Head from 'next/head'
-
+import Link from 'next/link'
+import { useRouter } from 'next/router'
 export default function Home() {
+const router = useRouter()
+const { slug } = router.query
   return (
     <div className="container">
       <Head>
-        <title>Create Next App</title>
+        <title>{slug}</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main>
         <h1 className="title">
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
+          {decodeURIComponent(slug)} <a href="https://nextjs.org">Next.js!</a>
+          <button onClick={() => router.push('/')}>
+      Click here to read more
+    </button>
         </h1>
-
+<Link href='/about'><a>about</a></Link>
         <p className="description">
           Get started by editing <code>pages/index.js</code>
         </p>
