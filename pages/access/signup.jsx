@@ -1,16 +1,25 @@
+import { useEffect } from "react";
 import Head from "next/head";
 import Link from "next/link";
-import Header  from "../../components/Header";
-import Footer  from "../../components/Footer";
+import Header  from "../Header";
+import Footer  from "../Footer";
 import * as FA  from 'react-icons';
 import countries from '../../components/countries'
+import Form from "../../components/Form";
 import { FaUser } from "react-icons/fa";
 export default function Signup() {
+  
     function fixdail(e){const country=countries.filter(function(country){
         return country.name===e.target.value
         });
         document.querySelector('.phonecode').value=country[0]['dialCode'];
       } 
+      function hookform(){  document.querySelectorAll('form:not(.unlink)').forEach((form)=>{
+        form.addEventListener('submit',Form)
+      })}
+      useEffect(()=>{
+        hookform()
+      })
   return (
     <>
     <Header/>
@@ -18,13 +27,13 @@ export default function Signup() {
       <div className='container row card mx-auto account p-4'>   <div className='col-12'>  
      <div className='w-[96%] lg:w-[48%] mt-6 mx-auto shadow-lg p-3'>   
      <div className="bg-indigo-50 py-3 px-3 font-bold text-xl text-center"><span>SIGNUP ACCOUNT</span></div> 
-     
+     <form method="post" action="/users/register">
      <div className="input-group mt-2 p-4">
 <label className="font-semibold uppercase">Name:</label>
-<input type="text" name="name" className="pl-2 py-2  w-full rounded-lg  border-2 border-ash-200"  />
+<input type="text" name="name" className="pl-2 py-2  w-full rounded-lg  border-2 border-ash-200"  required/>
 </div><div className="input-group mt-2 p-4">
 <label className="font-semibold uppercase">Email Address:</label>
-<input type="text" name="email" className="pl-2 py-2  w-full rounded-lg  border-2 border-ash-200"  />
+<input type="text" name="email" className="pl-2 py-2  w-full rounded-lg  border-2 border-ash-200"  required/>
 </div>
 <div className="input-group mt-2 p-4">
 <label className="font-semibold uppercase">Country:</label>
@@ -40,16 +49,16 @@ export default function Signup() {
               </div>
 <div className="input-group mt-2 p-4">
 <label className="font-semibold uppercase">Password:</label>
-<input type="text" name="pwd" className="pl-2 py-2  w-full rounded-lg border-2 border-ash-200" placeholder="*******" />
+<input type="password" name="password" className="pl-2 py-2  w-full rounded-lg border-2 border-ash-200" placeholder="*******" required/>
 </div>
 <div className="input-group mt-2 p-4">
 <label className="font-semibold uppercase">Confirm Password:</label>
-<input type="text" name="cpwd" className="pl-2 py-2  w-full rounded-lg border-2 border-ash-200" placeholder="*******" />
+<input type="password" name="cpassword" className="pl-2 py-2  w-full rounded-lg border-2 border-ash-200" placeholder="*******" required/>
 </div>
 <div className="flex"></div>
 <div className="input-group mt-2">
 <button type='submit' className='p-3 bg-blue-300 hover:bg-blue-400  rounded-xl w-full text-center mx-auto'>SEND MESSAGE</button>
-</div></div>
+</div></form></div>
         </div></div>
     </div>
     <Footer/>

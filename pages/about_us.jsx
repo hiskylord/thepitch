@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Link from "next/link";
-import Header  from "../components/Header";
-import Footer from "../components/Footer";
+import Header  from "./Header";
+import Footer from "./Footer";
 import {FaFacebookSquare,FaInstagramSquare,FaTwitterSquare} from 'react-icons/fa'
 export default function About() {
   return (
@@ -15,9 +15,9 @@ export default function About() {
                         <h2 className="uppercase">About
                             Iskysoftic
                         </h2>
-                        <p className="italic text-muted my-4">
+                        <div className="italic text-muted my-4">
                             Iskysoftic was established in 2021.We are a company of experts in the Tech space with pros in web and mobile design,developement, and management. Iskysoftic store is aimed at sales of business websites and apps to customers to enable anyone make money or manage their business from and within the online space.  
-                                Iskysoftic is a trade center and a community for the everyone who wants a software or seeks to sell one; also for the experienced, young or aspiring developer. </p>
+                                Iskysoftic is a trade center and a community for the everyone who wants a software or seeks to sell one; also for the experienced, young or aspiring developer. </div>
                     </div>
                     <div className="col-lg-5 px-5 mx-auto order-1 order-lg-2"><img src="/assets/images/about-us.jpg"  className="img-fluid mb-4 mb-lg-0"/></div>
                 </div>
@@ -25,13 +25,13 @@ export default function About() {
 
                     <div className="w-96 lg:w-48 ml-10">
                         <h2 className="font-semibold mb-5 underline text-xl">Our Services</h2>
-                        <p className="font-italic text-muted">
+                        <div className="font-italic text-muted">
                             <ul className="list-disc">
                                 <li>Website Trade</li>
                                 <li>App Trade</li>
                                 <li>Web developement</li>
                                 <li>App Development</li><li>Programming Education</li></ul>
-                        </p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -88,4 +88,5 @@ export default function About() {
     <Footer/>
     </>
   );
+  
 }

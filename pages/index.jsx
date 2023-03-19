@@ -1,91 +1,229 @@
-import Head from "next/head";
-import { useState,useEffect } from "react";
-import Link from "next/link";
-import Header  from "../components/Header";
-import Footer  from "../components/Footer";
-import {PItemcard,NItemcard} from "../components/Itemcard"
-import Image from "next/image";
-import {FaCartPlus,FaEye,FaAngleRight,FaHeart,FaRegGem}   from 'react-icons/fa';
-import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
-import { Carousel } from 'react-responsive-carousel';
-import  lg from "../public/assets/logo.png"
- function Home({products,fcartcount}) {
-  let [categories,setCategories]=useState([])
-  let [cartcount,setCartCount]=useState(fcartcount>0?fcartcount:0);
-  useEffect(async ()=>{
-    const res = await fetch('https://dummyjson.com/products/categories');
-const catgories  = await res.json();
-setCategories(catgories);
-    },[])
-  let Indexslides=[{href:products[0]['thumbnail'],desc:products[0]['title']},{href:products[1]['thumbnail'],desc:products[1]['title']},{href:products[2]['thumbnail'],desc:products[2]['title']}]
+import Head from 'next/head'
+import { useState, useEffect } from 'react'
+import Link from 'next/link'
+import Axios from 'axios'
+import Header from './Header'
+import Footer from './Footer'
+import { PItemcard, NItemcard, AdsItemcard } from '/components/Itemcard'
+import { unProtect } from '/components/unprotected'
+import Image from 'next/image'
+import {
+  FaSearch,
+  FaAngleRight,
+  FaAngleDoubleRight,
+  FaRegGem,
+} from 'react-icons/Fa'
+import 'react-responsive-carousel/lib/styles/carousel.min.css' // requires a loader
+import { Carousel } from 'react-responsive-carousel'
+import { Roboto, Lato, Oswald, Tangerine } from '@next/font/google'
+import Typewriter from 'typewriter-effect/dist/core'
+const roboto = Roboto({
+  subsets: ['latin'],
+  display: 'swap',
+  weight: ['400', '700'],
+})
+const tangerine = Tangerine({
+  subsets: ['latin'],
+  display: 'swap',
+  weight: ['400', '700'],
+})
+const lato = Lato({
+  subsets: ['latin'],
+  display: 'swap',
+  weight: '700',
+})
+const oswald = Oswald({
+  subsets: ['latin'],
+  display: 'swap',
+  weight: '400',
+})
+import lg from '../public/assets/logo.png'
+function Home({ data }) {
+  const items = data[0].all
+  useEffect(() => {
+    new Typewriter('#apptext', {
+      strings: [
+        'Get that Online Business up and running now.',
+        'We are your One Stop Partners',
+      ],
+      autoStart: true,
+      loop: true,
+    })
+  })
+  const [cartcount, setCartCount] = useState(0)
+
   return (
     <>
-    <Header fcartcount={fcartcount}/>
-    <div className="block">
-    <div className="flex flex-col justify-between w-full lg:w-5/6   mx-auto">
-    <div className='mx-auto flex lg:flex-row-reverse flex-col'>
-      <Carousel autoPlay interval="2500" transitionTime="2500" className="drop-shadow-lg" showThumbs={false}>
-      { Indexslides.map((slide)=>
-        <div className="relative">
-                    <img src={slide.href} alt='Slider'  className='w-full lg:w-full/2 h-96 lg:h-[450px]' />
-                    <p className="legend my-auto">{slide.desc}</p>
+      <Header cartcount={cartcount} setCartCount={setCartCount} />
+      <div className="block w-full">
+        <div className="lg:h-[550px] h-[500px] w-full">
+          <div className="mx-auto flex lg:flex-row-reverse flex-col bg-gray-800 h-full">
+            <Carousel
+              autoPlay
+              interval="2500"
+              transitionTime="2500"
+              className="drop-shadow-lg w-full lg:h-[600px] h-[450px]"
+              showThumbs={false}
+            >
+              <div className="relative my-auto lg:h-[500px] h-[450px]">
+                <img
+                  src={'/assets/images/wave1.png'}
+                  alt="Slider"
+                  className="w-full lg:w-full/2 h-full lg:h-[500px]"
+                  style={{ filter: 'invert(0.5)' }}
+                />
+                <div className="legend2">
+                  <div className="my-auto">
+                    <p
+                      className={
+                        'mx-auto lg:text-6xl text-4xl font-bold mt-10 text-yellow-500 ' +
+                        roboto.className
+                      }
+                      style={{
+                        textShadow: '4px 4px 4px #999',
+                      }}
+                    >
+                      {process.env.SITENAME}
+                    </p>
+                    <p
+                      className={
+                        'lg:text-6xl text-3xl font-semibold mt-6 text-blue-100 ' +
+                        tangerine.className
+                      }
+                      style={{
+                        textShadow: '4px 4px 4px #dfbe5c',
+                      }}
+                    >
+                      #1 Platform to Buy and Sell sophisticated and fully
+                      customizable
+                    </p>
+                    <h2
+                      className={
+                        'lg:text-4xl text-2xl mt-7 font-bold text-blue-100 ' +
+                        tangerine.className
+                      }
+                      style={{
+                        fontSize: '48px',
+                        textShadow: '4px 4px 4px #dfbe5c',
+                      }}
+                    >
+                      Websites and Apps
+                    </h2>
+                  </div>
+
+                  <div className="visible mt-10 searchform w-full  max-h-[200px] py-10  transition-colors duration-500 lg:w-[65%] w-[96%] mx-auto">
+                    <form
+                      method="get"
+                      className="flex h-fit mx-auto my-auto border-2 border-yellow-400 hover:w-full w-[96%] rounded place-self-auto"
+                      action="/listings"
+                    >
+                      <input
+                        name="query"
+                        className={
+                          'pl-2 py-2 rounded-l flex-grow  focus:w-96 focus:outline-none ' +
+                          lato.className
+                        }
+                        placeholder="Search..."
+                      />
+                      <button className="pr-auto p-2  py-3 rounded-r bg-white">
+                        <FaSearch className="text-yellow" />
+                      </button>
+                    </form>
+                    <small
+                      id="apptext"
+                      className={
+                        'text-blue-100 text-sm uppercase ' + oswald.className
+                      }
+                    ></small>
+                  </div>
                 </div>
-                 )}
-              
-            </Carousel>  
-    </div>
-<div className="pt-5 mx-3 lg:mx-1">
-  <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
-   {products.map((item)=><NItemcard data={item}/>)}
-</div>
+              </div>
+            </Carousel>
+          </div>
+        </div>
+        <div className="flex flex-col justify-between w-full mx-auto ">
+          {items.filter((t) => t.promoted).length > 0 && (
+            <div className="my-2 rounded-top-lg shadow-lg uppercase bg-yellow-400 py-3 mb-3 border-2 border-slate-300 text-gray rounded-top-lg shadow-lg uppercase py-2">
+              <div className="flex justify-between text-sm mx-2">
+                <p className="font-semibold uppercase"> Promoted</p>
+                <FaRegGem className="text-white font-bold text-xl rotate" />
+              </div>
+            </div>
+          )}
+          <div className="relative ads">
+            {items
+              .filter((t) => t.promoted)
+              .slice(-3)
+              .reverse()
+              .map((data) => (
+                <AdsItemcard data={data} />
+              ))}
+          </div>
+          <div className="rounded-top-lg shadow-lg uppercase bg-yellow-400 py-3 my-3 border-2 border-slate-300 text-gray rounded-top-lg shadow-lg uppercase  py-2">
+            <div className="flex justify-between text-sm mx-2">
+              <p className="font-semibold uppercase"> Latest</p>
+              <Link
+                href="/latest"
+                title="All Items"
+                className="flex uppercase font-bold"
+              >
+                <span>All Items</span>
+                <FaAngleDoubleRight className="my-auto text-xl" />
+              </Link>
+            </div>
+          </div>
+          <div className="my-2 mx-3 lg:mx-1">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 mb-4">
+              {items
+                .slice(-16)
+                .reverse()
+                .map((item) => (
+                  <NItemcard data={item} />
+                ))}
+            </div>
 
- <div className="bg-light-300 shadow"><p className="rounded-top-lg shadow-lg uppercase bg-yellow-300 py-3 mb-3  rounded-t flex justify-between"><h2 className="ml-3">Hot Deals</h2> <span>Time Left: 2:44:40</span> <Link href='/promotions'><a className="flex"><span className="my-auto text-white">View All</span> <FaAngleRight className="my-auto text-white"/></a></Link></p>
-<div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
-   {products.filter(pro=>pro.stock>60).map((item)=><PItemcard data={item}/>)}
-</div>
-</div>
-<div className="bg-light-300 shadow mt-10"><p className="rounded-top-lg shadow-lg uppercase bg-light-300 py-3 mb-3  rounded-t flex justify-between"><h2 className="ml-3">Customers Picks</h2> <Link href='/listings'><a className="flex rounded-full bg-yellow-400 hover:bg-yellow-300"><span className="my-auto text-white pl-2">All</span> <FaAngleRight className="my-auto text-white"/></a></Link></p>
-<div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
-   {products.map((item)=><NItemcard data={item}/>)}
-</div></div>
-
-</div>
-
-    </div>
-    <Footer className='flex-[4]'/>
-    </div>
-    
+            <div className="bg-light-300 shadow">
+              <div className="rounded-top-lg shadow-lg uppercase bg-yellow-300 py-3 mb-3  rounded-t flex justify-between text-sm">
+                <div className="flex justify-between text-sm mx-2 w-full">
+                  <p className="font-semibold uppercase"> Hot Deals</p>
+                  <Link
+                    href="/promotions"
+                    title="Promotions"
+                    className="flex uppercase font-bold"
+                  >
+                    <span>Promotions</span>
+                    <FaAngleDoubleRight className="my-auto text-xl" />
+                  </Link>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 mx-auto">
+                {items
+                  .sort((a, b) => b.discount > a.discount)
+                  .slice(-16)
+                  .map((item) => (
+                    <PItemcard data={item} />
+                  ))}
+              </div>
+            </div>
+            <div className="bg-light-300 shadow my-4">
+              <div className="rounded-top-lg shadow-lg text-sm uppercase bg-yellow-300 py-3 mb-3  rounded-t">
+                <h2 className="ml-3 font-semibold">Customers Picks</h2>
+              </div>
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
+                {items.map((item) => (
+                  <NItemcard data={item} />
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+        <Footer className="flex-[4]" />
+      </div>
     </>
-  );
+  )
 }
-// export async function getStaticProps() {
-//   return { props: { title: 'HomePage' } }
-// }
+
 export async function getServerSideProps(context) {
-  let products= await fetch('https://dummyjson.com/products').then(res=>{
-    if(res.ok){
-      return res.json()
-    }
-  }).then(data => {
-return data.products;
-  }).catch(err => {
-      console.error({err})})
-      let fcartcount= await fetch('https://dummyjson.com/carts/user/5').then(res=>{
-        if(res.ok){
-          return res.json()
-        }
-      }).then(data => {
-        console.log(data.carts[0].products)
-    return data.carts[0].products.length;
-      }).catch(err => {
-          console.error({err})})
-  return {
-    props: {products,fcartcount},
-     // will be passed to the page component as props
-  }
-
- 
-  }
-
-  
-export default Home;
+  return await unProtect(context, [`/api/item/index/all`])
+}
+export default Home
