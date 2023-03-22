@@ -1,4 +1,4 @@
-import { React, useState } from 'react'
+import { React, useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { MdOutlineEmail } from 'react-icons/Md'
@@ -7,14 +7,29 @@ import {
   FaInstagramSquare,
   FaTwitterSquare,
 } from 'react-icons/Fa'
+import Axios from 'axios'
+import { Strtolink } from '/components/Itemcard'
 const Footer = () => {
-  let categories = [
-    { title: 'education', link: 'education' },
-    { title: 'Investments', link: 'investment' },
-    { title: 'Ecommerce', link: 'title' },
-    { title: 'company', link: 'title' },
-    { title: 'blogs', link: 'title' },
-  ]
+  const [categories, setCategories] = useState([])
+  useEffect(() => {
+    fetch(
+      window.location.protocol +
+        '//' +
+        window.location.host +
+        '/api/sitedata/categories',
+    )
+      .then((res) => {
+        if (res.ok) {
+          return res.json()
+        }
+      })
+      .then((data) => {
+        setCategories(data.data.categories)
+      })
+      .catch((err) => {
+        console.error({ err })
+      }, [])
+  }, [])
   return (
     <footer
       className="w-full"
@@ -33,10 +48,12 @@ const Footer = () => {
           </div>
           {categories.map((category, k) => (
             <div key={k} className="py-1" role="none">
-              <Link legacyBehavior key={k} href={'/' + category.link}>
-                <a className="text-white block  text-sm text-white hover:text-gray-300">
-                  {category.title.toUpperCase()}
-                </a>
+              <Link
+                key={k}
+                href={'/' + Strtolink(category['category'])}
+                className="text-white block  text-sm text-white hover:text-gray-300"
+              >
+                {category['category'].toUpperCase()}
               </Link>
             </div>
           ))}
@@ -158,4 +175,5 @@ const Footer = () => {
     </footer>
   )
 }
+
 export default Footer

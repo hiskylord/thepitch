@@ -2,19 +2,10 @@ import React, { Component, useEffect, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useCartcontext } from '/components/context/cartcontext'
-import {
-  FaCartPlus,
-  FaEye,
-  FaAngleRight,
-  FaHeart,
-  FaRegGem,
-  FaTrash,
-  FaEdit,
-} from 'react-icons/Fa'
+import { FaCartPlus, FaEye, FaHeart, FaTrash, FaEdit } from 'react-icons/Fa'
 import { MdShoppingCart, MdFileDownload } from 'react-icons/Md'
 import { FcAdvertising } from 'react-icons/Fc'
 import Swal from 'sweetalert2'
-import sha256 from 'crypto-js/md5'
 import Axios from 'axios'
 export let Strtolink = (str) => {
   return str
@@ -40,7 +31,7 @@ export const baseurl = () => {
 }
 export function AdsItemcard({ data }) {
   return (
-    <div>
+    <div className="hover:scale-[105%]">
       <Link
         href={'/item/' + Strtolink(data.title) + '/' + data._id}
         title={data.title}
@@ -61,20 +52,17 @@ export function PItemcard({ data }) {
   data.thumbnail =
     '/uploads/items/temp/' + data.photos[0].split('.')[0] + '_thumbnail.jpeg'
   return (
-    <Link
-      className="bg-light-100 lg:w-full rounded-lg shadow-lg border-2 hover:border-yellow-200 my-2"
-      href={`item/${Strtolink(data.title)}/${data._id}`}
-    >
+    <div className="bg-light-100 lg:w-full rounded-lg shadow-lg border-2 hover:border-yellow-200 my-2">
       <div className="hotitem relative  lg:w-full rounded-lg">
         <div className="relative lg:w-full h-[200px] rounded-lg">
-          <Image src={data.thumbnail} fill={true} />
+          <Image src={data.thumbnail} fill={true} alt={data.title} />
         </div>
         <span className="bg-yellow-400 rounded-full absolute right-0 top-0">
           {data.discount > 0
             ? '-' + Number(data.discount).toFixed(1) + '%'
             : ''}
         </span>
-        <div className="hotitemdesc absolute w-full h-[180px] top-0 flex flex-col justify-between rounded-lg shadow-lg">
+        <div className="hotitemdesc absolute w-full h-[200px] top-0 flex flex-col justify-between rounded-lg shadow-lg">
           <div className="mt-1 py-3 text-white bg-black opacity-70">
             <span className="mx-2 uppercase text-sm truncate">
               {data.title}!
@@ -99,14 +87,14 @@ export function PItemcard({ data }) {
                 href={`/item/${Strtolink(data.title)}/${data._id}`}
                 className="bg-yellow-400 hover:bg-yellow-600 flex justify-between text-white px-2 rounded-full my-1"
               >
-                <text className="mx-2 my-auto">VIEW</text>{' '}
+                <span className="mx-2 my-auto">VIEW</span>{' '}
                 <FaEye className="my-auto text-white-300 my-auto" />
               </Link>
             </div>
           </div>
         </div>
       </div>
-    </Link>
+    </div>
   )
 }
 export function NItemcard({ data }) {
@@ -114,9 +102,8 @@ export function NItemcard({ data }) {
   data.thumbnail =
     '/uploads/items/temp/' + data.photos[0].split('.')[0] + '_thumbnail.jpeg'
   return (
-    <div className="bg-light-100 lg:w-full  relative shadow-lg border-2 hover:border-yellow-200 rounded-lg">
+    <div className="hover:scale-[105%] bg-light-100 lg:w-full  relative shadow-lg border-2 hover:border-yellow-200 rounded-lg">
       {' '}
-      <FaHeart className="absolute z-[200] text-xl hover:bg-ash-400 hover:text-yellow-400 bg-white rounded-full p-1 top-0 right-0  text-red-500 shadow-lg" />
       <div className="bg-white rounded-lg shadow-lg">
         <Link
           href={`/item/${Strtolink(data.title)}/${data._id}`}
@@ -156,15 +143,14 @@ export function NItemcard({ data }) {
                 {data.discount > 0 ? data.price.toLocaleString() : ''}
               </del>
             </span>
-            <a href="#" onClick={() => setCart(data._id)}>
+            <div onClick={() => setCart(data._id)}>
               <button className="text-black flex justify-between bg-yellow-400 hover:bg-yellow-300 p-2 rounded-full">
-                <text className="mx-2">
-                  {' '}
+                <span className="mx-2">
                   {cart.includes(data._id) ? 'REMOVE' : 'CART'}
-                </text>{' '}
+                </span>
                 <FaCartPlus className="text-white-300 my-auto" />
               </button>
-            </a>
+            </div>
           </div>
           <div className="flex justify-between"></div>
         </div>
@@ -342,7 +328,7 @@ export function ListedItemcard({ data, setList }) {
                 <FaEye className="text-white-300 text-lg my-auto" />
               </span>
               <span className="my-auto font-bold bg-blue-300 rounded-full p-[3px] mr-2">
-                {data.views}
+                {data.views.toLocaleString()}
               </span>
             </Link>
             <Link
@@ -474,7 +460,6 @@ export function ANItemcard({ data }) {
   return (
     <div className="bg-light-100 lg:w-full pb-3 relative">
       {' '}
-      <FaHeart className="absolute z-[200] text-xl hover:bg-ash-400 hover:text-yellow-400 bg-white rounded-full p-1 top-0 right-0  text-red-500 " />
       <div className="bg-white rounded-lg shadow-lg">
         <div className="w-full lg:w-full/2">
           <div className="relative rounded-t-lg" height="300px">

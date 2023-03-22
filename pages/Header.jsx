@@ -6,78 +6,24 @@ import { FaSearch, FaTimes, FaCaretDown } from 'react-icons/Fa'
 import { MdShoppingCart, MdOutlineLogout } from 'react-icons/Md'
 import Axios from 'axios'
 import sha256 from 'crypto-js/md5'
+import { Strtolink } from '/components/Itemcard'
 const Header = () => {
   const { cart, setCart } = useCartcontext()
-  useEffect(() => {})
-  const fetchitems = () => {
-    const { p } = router.query
-    fetch(process.env.BACK_SERVER + '/listings/' + Number(p))
-      .then((res) => {
-        if (res.ok) {
-          return res.json()
-        }
-      })
-      .then((data) => {
-        console.log(data.items)
-        setItems(data.items)
-      })
-      .catch((err) => {
-        console.error({ err })
-      })
-  }
-  const [carts, setCarts] = useState([])
-  const [cartitms, setCartitms] = useState([])
-  useEffect(() => {
-    let cartid
-    if (localStorage.getItem('cartid') === null) {
-      cartid = sha256(Date.now()).toString() + Date.now()
-      localStorage.setItem('cartid', cartid)
-    } else {
-      cartid = localStorage.getItem('cartid')
-    }
-    Axios.post(process.env.BACK_SERVER + '/cart/' + cartid, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        token: sessionStorage.getItem('token')
-          ? sessionStorage.getItem('token')
-          : '',
-      },
-    })
-      .then((res) => {
-        if (res.data.carts.length > 0) {
-          setCartCount(res.data.carts.length)
-          setCarts(res.data.carts)
-        }
-      })
-      .catch((err) => {
-        console.log(err.message)
-      })
-    fetch(process.env.BACK_SERVER + '/cart/' + cartid)
-      .then((res) => {
-        if (res.ok) {
-          return res.json()
-        }
-      })
-      .then((data) => {
-        if (data.carts.length > 0) {
-          setCartitms(data.carts)
-        }
-      })
-      .catch((err) => {
-        console.log(err.message)
-      })
-  }, [])
-
   const [categories, setCategories] = useState([])
   useEffect(() => {
-    fetch(process.env.BACK_SERVER + '/categories')
+    fetch(
+      window.location.protocol +
+        '//' +
+        window.location.host +
+        '/api/sitedata/categories',
+    )
       .then((res) => {
         if (res.ok) {
           return res.json()
         }
       })
       .then((data) => {
-        setCategories(data.categories)
+        setCategories(data.data.categories)
       })
       .catch((err) => {
         console.error({ err })
@@ -87,23 +33,6 @@ const Header = () => {
   let [Catmenu, setCatmenu] = useState(false)
   const [islogged, setLogged] = useState(false)
   let [Search, setSearch] = useState(false)
-
-  function logout() {
-    sessionStorage.removeItem('token')
-    sessionStorage.removeItem('User')
-    sessionStorage.removeItem('admin')
-    window.location = '/'
-  }
-  function logged() {
-    return (
-      sessionStorage.getItem('token') &&
-      sessionStorage.getItem('token').length > 0
-    )
-  }
-  useEffect(() => {
-    setLogged(logged())
-  })
-  console.log(islogged)
   function setShow(opt) {
     switch (opt) {
       case 'Sidebar':
@@ -191,15 +120,15 @@ const Header = () => {
             >
               {categories.map((cat, k) => (
                 <div key={k} className="py-1" role="none">
-                  <a
-                    href={'/categories/' + cat}
+                  <Link
+                    href={'/categories/' + Strtolink(cat.category)}
                     className="hover:bg-yellow-100 text-gray-700 block px-4 py-2 text-sm"
                     role="menuitem"
-                    tabIndex="-1"
+                    tabIndex={k == 1 ? '-1' : '1'}
                     id="menu-item-0"
                   >
-                    {cat}
-                  </a>
+                    {cat.category}
+                  </Link>
                 </div>
               ))}
             </div>
@@ -207,21 +136,19 @@ const Header = () => {
           <div className="flex justify-center">
             {!islogged ? (
               <>
-                <Link legacyBehavior href="/access/signup">
-                  <a
-                    title="signup"
-                    className="inline-block  mx-1 text-sm px-4 py-2 leading-none  rounded text-yellow  border-dark text-yellow-500 bg-black mt-4 hover:bg-yellow-500  hover:text-white hover:border-white lg:mt-0"
-                  >
-                    Signup
-                  </a>
+                <Link
+                  href="/access/signup"
+                  title="signup"
+                  className="inline-block  mx-1 text-sm px-4 py-2 leading-none  rounded text-yellow  border-dark text-yellow-500 bg-black mt-4 hover:bg-yellow-500  hover:text-white hover:border-white lg:mt-0"
+                >
+                  Signup
                 </Link>
-                <Link legacyBehavior href="/access/signin">
-                  <a
-                    title="signin"
-                    className="inline-block mx-1 text-sm px-4 py-2 leading-none border rounded text-black border-dark hover:border-transparent hover:text-yellow-500 hover:bg-black mt-4 lg:mt-0"
-                  >
-                    signin
-                  </a>
+                <Link
+                  href="/access/signin"
+                  title="signin"
+                  className="inline-block mx-1 text-sm px-4 py-2 leading-none border rounded text-black border-dark hover:border-transparent hover:text-yellow-500 hover:bg-black mt-4 lg:mt-0"
+                >
+                  signin
                 </Link>
               </>
             ) : (
@@ -339,17 +266,17 @@ const Header = () => {
                 arialabelledby="catergoies-menu"
                 tabIndex="-1"
               >
-                {categories.map((cat) => (
-                  <div key={cat} className="py-1" role="none">
-                    <a
-                      href={'/categories/' + cat}
+                {categories.map((cat, k) => (
+                  <div key={k} className="py-1" role="none">
+                    <Link
+                      href={'/categories/' + Strtolink(cat.category)}
                       className="text-gray-700 block px-4 py-2 text-sm"
                       role="menuitem"
                       tabIndex="-1"
                       id="menu-item-3"
                     >
-                      {cat}
-                    </a>
+                      {cat.category}
+                    </Link>
                   </div>
                 ))}
               </div>

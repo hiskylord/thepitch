@@ -144,7 +144,7 @@
 }
 .ads {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 10px;
 }
 .ads > div {
@@ -166,7 +166,15 @@
   aspect-ratio: 3/2;
   object-fit: cover;
 }
-
+@media (max-width: 600px) {
+  @media (max-width: 600px) {
+    .ads {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+  }
+}
 @keyframes rotation {
   from {
     transform: rotate(0deg);

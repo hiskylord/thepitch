@@ -17,7 +17,7 @@ import {
 } from 'react-icons/Fa'
 import { RxDoubleArrowRight, RxHome } from 'react-icons/Rx'
 import Image from 'next/image'
-import { useEffect, useState, useRef, useMemo } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { Strtolink } from '/components/itemcard'
 import Form from '/components/Form'
 import { useCartcontext } from '/components/context/cartcontext'
@@ -49,9 +49,7 @@ function Item({ data }) {
   return (
     <>
       <Head>
-        <title>
-          {item.title}:{process.env.SITENAME}
-        </title>
+        <title>{item.title + ':' + process.env.SITENAME}</title>
         <meta name="keywords" content={item.tags} />
       </Head>
       <Header />
@@ -158,7 +156,7 @@ function Item({ data }) {
               </button>
               {item.preview !== '' && (
                 <Link
-                  href={'/item/' + '/preview/' + item._id}
+                  href={'/item' + '/preview/' + item._id}
                   className="bg-yellow-300 hover:bg-slate-200 bg-yellow-300 font-semibold rounded-lg py-3 text-xs flex px-3 justify-center"
                 >
                   <span className="mr-1">VIEW DEMO</span> <FaRegEye />

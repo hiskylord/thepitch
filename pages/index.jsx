@@ -1,12 +1,12 @@
 import Head from 'next/head'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import Link from 'next/link'
 import Axios from 'axios'
 import Header from './Header'
 import Footer from './Footer'
 import { PItemcard, NItemcard, AdsItemcard } from '/components/Itemcard'
 import { unProtect } from '/components/unprotected'
-import Image from 'next/image'
+import { useSearchParams } from 'next/navigation'
 import {
   FaSearch,
   FaAngleRight,
@@ -15,31 +15,14 @@ import {
 } from 'react-icons/Fa'
 import 'react-responsive-carousel/lib/styles/carousel.min.css' // requires a loader
 import { Carousel } from 'react-responsive-carousel'
-import { Roboto, Lato, Oswald, Tangerine } from '@next/font/google'
 import Typewriter from 'typewriter-effect/dist/core'
-const roboto = Roboto({
-  subsets: ['latin'],
-  display: 'swap',
-  weight: ['400', '700'],
-})
-const tangerine = Tangerine({
-  subsets: ['latin'],
-  display: 'swap',
-  weight: ['400', '700'],
-})
-const lato = Lato({
-  subsets: ['latin'],
-  display: 'swap',
-  weight: '700',
-})
-const oswald = Oswald({
-  subsets: ['latin'],
-  display: 'swap',
-  weight: '400',
-})
+
 import lg from '../public/assets/logo.png'
-function Home({ data }) {
+function Home({ data, categories, fonts }) {
   const items = data[0].all
+  const searchParams = useSearchParams()
+  const query = searchParams.get('query')
+  const { roboto, tangerine, lato, oswald } = fonts
   useEffect(() => {
     new Typewriter('#apptext', {
       strings: [
@@ -51,6 +34,13 @@ function Home({ data }) {
     })
   })
   const [cartcount, setCartCount] = useState(0)
+  const promoted = useMemo(
+    () =>
+      items
+        .sort((a, b) => parseInt(b.discount) - parseInt(a.discount))
+        .slice(-16),
+    [items],
+  )
 
   return (
     <>
@@ -155,15 +145,15 @@ function Home({ data }) {
               .filter((t) => t.promoted)
               .slice(-3)
               .reverse()
-              .map((data) => (
-                <AdsItemcard data={data} />
+              .map((data, k) => (
+                <AdsItemcard key={k} data={data} />
               ))}
           </div>
           <div className="rounded-top-lg shadow-lg uppercase bg-yellow-400 py-3 my-3 border-2 border-slate-300 text-gray rounded-top-lg shadow-lg uppercase  py-2">
             <div className="flex justify-between text-sm mx-2">
               <p className="font-semibold uppercase"> Latest</p>
               <Link
-                href="/latest"
+                href="/latest/1"
                 title="All Items"
                 className="flex uppercase font-bold"
               >
@@ -177,8 +167,8 @@ function Home({ data }) {
               {items
                 .slice(-16)
                 .reverse()
-                .map((item) => (
-                  <NItemcard data={item} />
+                .map((item, k) => (
+                  <NItemcard data={item} key={k} />
                 ))}
             </div>
 
@@ -187,7 +177,7 @@ function Home({ data }) {
                 <div className="flex justify-between text-sm mx-2 w-full">
                   <p className="font-semibold uppercase"> Hot Deals</p>
                   <Link
-                    href="/promotions"
+                    href="/promotions/1"
                     title="Promotions"
                     className="flex uppercase font-bold"
                   >
@@ -197,12 +187,9 @@ function Home({ data }) {
                 </div>
               </div>
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 mx-auto">
-                {items
-                  .sort((a, b) => b.discount > a.discount)
-                  .slice(-16)
-                  .map((item) => (
-                    <PItemcard data={item} />
-                  ))}
+                {promoted.map((itm, k) => (
+                  <PItemcard data={itm} key={k} />
+                ))}
               </div>
             </div>
             <div className="bg-light-300 shadow my-4">
@@ -210,14 +197,17 @@ function Home({ data }) {
                 <h2 className="ml-3 font-semibold">Customers Picks</h2>
               </div>
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
-                {items.map((item) => (
-                  <NItemcard data={item} />
-                ))}
+                {items
+                  .sort((a, b) => a.likes - b.likes)
+                  .slice(-16)
+                  .map((itm, k) => (
+                    <NItemcard data={itm} key={k} />
+                  ))}
               </div>
             </div>
           </div>
         </div>
-        <Footer className="flex-[4]" />
+        <Footer className="flex-[4]" categories={categories} />
       </div>
     </>
   )

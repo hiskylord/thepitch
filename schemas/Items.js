@@ -17,6 +17,7 @@ const itemsSchema = new mongoose.Schema({
   content: { type: String, required: true },
   guide: { type: String, required: true },
   likes: { type: Number, required: true,default:0 },
+  sales: { type: Number, required: true,default:0 },
   discount: { type: Number, required: true,default:0 },
   promoted: { type: Boolean, default: false, required: true },
   preview: { type: String, required: false },

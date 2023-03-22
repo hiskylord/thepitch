@@ -3,6 +3,6 @@ import { useEffect } from 'react'
 export default function toPromo() {
   const router = useRouter()
   useEffect(() => {
-    router.push('/')
+    router.push('/promotions/1')
   })
 }

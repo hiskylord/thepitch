@@ -21,6 +21,14 @@ const {action,id} = req.query
     case 'get':
       data.item = await items.findById(id)
       data.reviews = await reviews.find({iid:id})
+     data.updated=await items.findOneAndUpdate(
+          {
+            email: email,
+            _id:id,
+          },
+          {
+            $inc: {views: 1}
+          })
        break;
     case 'addreview':
  try{

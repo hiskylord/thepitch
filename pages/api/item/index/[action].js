@@ -8,6 +8,9 @@ switch(action) {
   case 'all':
     data.all=await items.find()
     break;
+  case 'promotions':
+    data.promotions=await items.find({promoted:true})
+    break;
   default:
         data.all = await items.find()
         break;
