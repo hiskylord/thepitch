@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+mongoose.set("strictQuery", false);
 const db = mongoose.connect(
   process.env.MGDB,
   { useNewUrlParser: true, useUnifiedTopology: true },
@@ -9,5 +10,5 @@ const db = mongoose.connect(
     console.log("failed");
   }
 );
-mongoose.set("strictQuery", false);
+
 export { db, mongoose };

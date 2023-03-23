@@ -7,7 +7,9 @@ import { MdShoppingCart, MdOutlineLogout } from 'react-icons/Md'
 import Axios from 'axios'
 import sha256 from 'crypto-js/md5'
 import { Strtolink } from '/components/Itemcard'
+import { useRouter } from 'next/navigation'
 const Header = () => {
+  const router = useRouter()
   const { cart, setCart } = useCartcontext()
   const [categories, setCategories] = useState([])
   useEffect(() => {
@@ -121,7 +123,7 @@ const Header = () => {
               {categories.map((cat, k) => (
                 <div key={k} className="py-1" role="none">
                   <Link
-                    href={'/categories/' + Strtolink(cat.category)}
+                    href={'/categories/' + Strtolink(cat.category) + '/1'}
                     className="hover:bg-yellow-100 text-gray-700 block px-4 py-2 text-sm"
                     role="menuitem"
                     tabIndex={k == 1 ? '-1' : '1'}
@@ -269,7 +271,7 @@ const Header = () => {
                 {categories.map((cat, k) => (
                   <div key={k} className="py-1" role="none">
                     <Link
-                      href={'/categories/' + Strtolink(cat.category)}
+                      href={'/categories/' + Strtolink(cat.category) + '/1'}
                       className="text-gray-700 block px-4 py-2 text-sm"
                       role="menuitem"
                       tabIndex="-1"
@@ -282,7 +284,15 @@ const Header = () => {
               </div>
             </div>
           </div>
-          <form method="get" className="flex mr-6" action="/listings">
+          <form
+            method="get"
+            onSubmit={(e) => {
+              e.preventDefault()
+              router.push(`/listings/?query=${e.target.query.value}`)
+            }}
+            className="flex mr-6"
+            action="/listings"
+          >
             <input
               name="query"
               className="pl-2 py-2 rounded-l focus:outline-none"

@@ -6,7 +6,7 @@ import Header from './Header'
 import Footer from './Footer'
 import { PItemcard, NItemcard, AdsItemcard } from '/components/Itemcard'
 import { unProtect } from '/components/unprotected'
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams, useRouter } from 'next/navigation'
 import {
   FaSearch,
   FaAngleRight,
@@ -19,6 +19,7 @@ import Typewriter from 'typewriter-effect/dist/core'
 
 import lg from '../public/assets/logo.png'
 function Home({ data, categories, fonts }) {
+  const router = useRouter()
   const items = data[0].all
   const searchParams = useSearchParams()
   const query = searchParams.get('query')
@@ -106,6 +107,10 @@ function Home({ data, categories, fonts }) {
                       method="get"
                       className="flex h-fit mx-auto my-auto border-2 border-yellow-400 hover:w-full w-[96%] rounded place-self-auto"
                       action="/listings"
+                      onSubmit={(e) => {
+                        e.preventDefault()
+                        router.push(`/listings/?query=${e.target.query.value}`)
+                      }}
                     >
                       <input
                         name="query"

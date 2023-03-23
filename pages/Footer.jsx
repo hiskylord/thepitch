@@ -50,7 +50,7 @@ const Footer = () => {
             <div key={k} className="py-1" role="none">
               <Link
                 key={k}
-                href={'/' + Strtolink(category['category'])}
+                href={'/categories/' + Strtolink(category['category']) + '/1'}
                 className="text-white block  text-sm text-white hover:text-gray-300"
               >
                 {category['category'].toUpperCase()}

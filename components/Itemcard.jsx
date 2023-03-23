@@ -3,7 +3,11 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useCartcontext } from '/components/context/cartcontext'
 import { FaCartPlus, FaEye, FaHeart, FaTrash, FaEdit } from 'react-icons/Fa'
-import { MdShoppingCart, MdFileDownload } from 'react-icons/Md'
+import {
+  MdShoppingCart,
+  MdFileDownload,
+  MdRemoveShoppingCart,
+} from 'react-icons/Md'
 import { FcAdvertising } from 'react-icons/Fc'
 import Swal from 'sweetalert2'
 import Axios from 'axios'
@@ -145,10 +149,17 @@ export function NItemcard({ data }) {
             </span>
             <div onClick={() => setCart(data._id)}>
               <button className="text-black flex justify-between bg-yellow-400 hover:bg-yellow-300 p-2 rounded-full">
-                <span className="mx-2">
-                  {cart.includes(data._id) ? 'REMOVE' : 'CART'}
-                </span>
-                <FaCartPlus className="text-white-300 my-auto" />
+                {cart.includes(data._id) ? (
+                  <>
+                    <span className="mx-2">REMOVE </span>{' '}
+                    <MdRemoveShoppingCart className="text-white-300 my-auto" />
+                  </>
+                ) : (
+                  <>
+                    <span className="mx-2">CART</span>{' '}
+                    <FaCartPlus className="text-white-300 my-auto" />{' '}
+                  </>
+                )}
               </button>
             </div>
           </div>

@@ -166,6 +166,11 @@
   aspect-ratio: 3/2;
   object-fit: cover;
 }
+.swal2-popup {
+  font-size: 0.5 !important;
+  font-family: Verdana, Geneva, Tahoma, sans-serif, serif;
+  text-transform: capitalize;
+}
 @media (max-width: 600px) {
   @media (max-width: 600px) {
     .ads {
