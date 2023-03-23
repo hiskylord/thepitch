@@ -3,7 +3,6 @@ import Footer from './Footer'
 import Link from 'next/link'
 import Axios from 'axios'
 import Image from 'next/image'
-import Form from '../components/Form'
 import Swal from 'sweetalert2'
 import countries from '/components/countries'
 import { useState, useEffect } from 'react'
@@ -14,6 +13,8 @@ import {
   FaArrowRight,
   FaTrashAlt,
   FaShoppingCart,
+  FaCreditCard,
+  FaBitcoin,
 } from 'react-icons/Fa'
 import { useCartcontext } from '/components/context/cartcontext'
 function Cartdetails({ data, fonts }) {
@@ -21,7 +22,23 @@ function Cartdetails({ data, fonts }) {
   const { cart, setCart } = useCartcontext()
   const [cartitems, setCartItems] = useState([])
   const [sumtotal, setSumtotal] = useState(0)
-
+  const [pmethod, setPMethod] = useState('bitcoin')
+  useEffect(() => {
+    document
+      .querySelector('.processpay')
+      .addEventListener('submit', function (e) {
+        e.preventDefault()
+        Axios.post('/api/' + e.target.getAttribute('action'), {
+          data: new FormData(e.target),
+        })
+          .then((res) => {
+            console.log(res)
+          })
+          .catch((err) => {
+            console.log(err.message)
+          })
+      })
+  }, [cart])
   useEffect(() => {
     Axios.post('/api/carts/fetch', { cart: cart })
       .then((res) => {
@@ -176,15 +193,15 @@ function Cartdetails({ data, fonts }) {
               </div>
             </div>
             <div className="w-full lg:w-[45%] p-4">
-              <form method="post">
+              <form method="post" action="carts/pay" className="processpay">
                 <div className="bg-indigo-50 py-1 px-1 font-bold text-xl text-center">
                   <span>CONTACT INFO</span>
                 </div>{' '}
                 <div className="input-group mt-1 p-2">
                   <label className="font-semibold uppercase">Name:</label>
                   <input
-                    type="email"
-                    name="email"
+                    type="text"
+                    name="name"
                     className="pl-1 py-1  w-full rounded-lg  border-2 border-ash-200"
                   />
                 </div>
@@ -210,6 +227,41 @@ function Cartdetails({ data, fonts }) {
                       <option key={key}>{country.name}</option>
                     ))}
                   </select>
+                  <input name="cart" value={cart} />
+                </div>
+                <div className="input-group mt-1 p-2 flex gap-4">
+                  <label
+                    onClick={() => setPMethod('bitcoin')}
+                    for="bitcoin"
+                    className={
+                      pmethod === 'bitcoin' ? 'border-2 border-slate-300' : ''
+                    }
+                  >
+                    <FaBitcoin className="text-3xl text-yellow-400" />
+                    <input
+                      type="radio"
+                      name="method"
+                      value="bitcoin"
+                      id="bitcoin"
+                      style={{ display: 'none' }}
+                    />
+                  </label>
+                  <label
+                    for="card"
+                    onClick={() => setPMethod('card')}
+                    className={
+                      pmethod === 'card' ? 'border-2 border-slate-300' : ''
+                    }
+                  >
+                    <FaCreditCard className="text-3xl text-green-400" />
+                    <input
+                      type="radio"
+                      name="method"
+                      value="card"
+                      id="card"
+                      style={{ display: 'none' }}
+                    />
+                  </label>
                 </div>
                 <div className="input-group mt-2">
                   <button
