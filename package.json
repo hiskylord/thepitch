@@ -9,6 +9,7 @@
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@next/font": "^13.0.2",
+    "aws4": "^1.12.0",
     "axios": "^1.2.1",
     "bcrypt": "^5.1.0",
     "bcryptjs": "^2.4.3",
@@ -36,9 +37,11 @@
     "react-responsive-carousel": "^3.2.23",
     "react-trix": "^0.10.0",
     "recharts": "^2.3.2",
+    "request": "^2.88.2",
     "serverless-mysql": "^1.5.4",
     "sharp": "^0.31.3",
     "sweetalert2": "^11.6.15",
+    "tiny-secp256k1": "^2.2.1",
     "typewriter-effect": "^2.19.0"
   },
   "devDependencies": {

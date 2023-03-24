@@ -28,11 +28,17 @@ function Cartdetails({ data, fonts }) {
       .querySelector('.processpay')
       .addEventListener('submit', function (e) {
         e.preventDefault()
-        Axios.post('/api/' + e.target.getAttribute('action'), {
-          data: new FormData(e.target),
+        const data = new FormData(e.target)
+        Axios({
+          data,
+          url: '/api/' + e.target.getAttribute('action'),
+          method: e.target.getAttribute('method'),
+          headers: {
+            'Content-Type': 'application/json',
+          },
         })
           .then((res) => {
-            console.log(res)
+            console.log(res.data)
           })
           .catch((err) => {
             console.log(err.message)
@@ -227,10 +233,10 @@ function Cartdetails({ data, fonts }) {
                       <option key={key}>{country.name}</option>
                     ))}
                   </select>
-                  <input name="cart" value={cart} />
+                  <input name="cart" value={cart} type="hidden" />
                 </div>
                 <div className="input-group mt-1 p-2 flex gap-4">
-                  <label
+                  <span
                     onClick={() => setPMethod('bitcoin')}
                     for="bitcoin"
                     className={
@@ -239,14 +245,14 @@ function Cartdetails({ data, fonts }) {
                   >
                     <FaBitcoin className="text-3xl text-yellow-400" />
                     <input
-                      type="radio"
+                      type="hidden"
                       name="method"
-                      value="bitcoin"
+                      value={pmethod}
                       id="bitcoin"
                       style={{ display: 'none' }}
                     />
-                  </label>
-                  <label
+                  </span>
+                  <span
                     for="card"
                     onClick={() => setPMethod('card')}
                     className={
@@ -254,14 +260,7 @@ function Cartdetails({ data, fonts }) {
                     }
                   >
                     <FaCreditCard className="text-3xl text-green-400" />
-                    <input
-                      type="radio"
-                      name="method"
-                      value="card"
-                      id="card"
-                      style={{ display: 'none' }}
-                    />
-                  </label>
+                  </span>
                 </div>
                 <div className="input-group mt-2">
                   <button
